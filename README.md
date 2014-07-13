@@ -31,6 +31,7 @@ The inspiration for this game comes from a game called [Fly Swatter](http://www.
 - Graphics for bugs need to be in SVG.
 - You are free to use whatever client side libraries you want.
 - The server-side code should be written in Node.js. You can use any 3rd party modules you want.
+- The top 10 scores can be stored in memory. No database persistence necessary.
 - We'll be judging your UI and design skills. Make it easy to play. Try to make it look good too, but we understand you have limited time.
 
 ## Submission
