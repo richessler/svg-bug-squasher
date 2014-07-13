@@ -38,7 +38,3 @@ The inspiration for this game comes from a game called [Fly Swatter](http://www.
 - Create a fork of this repo
 - Commit and push your code to your forked repo as many times as you want
 - Submit a pull request to the master branch when you're done. Congrats!
-
-## Final notes
-The requirements for this game are meant to be open ended and allow for creativity. If you are unsure of the requirements, please contact ed@socialtables.com with any questions you have.
-
