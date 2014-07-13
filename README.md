@@ -15,8 +15,8 @@ The inspiration for this game comes from a game called [Fly Swatter](http://www.
 - Clicking on a bug should kill it and give the user points.
 - If a bug reaches the right side of the playing screen without getting squashed, the player loses
 - There should be three different types of bugs:
--- Each bug should have its own SVG graphics
--- There should be an easy, medium, and hard bug. For example, the easy bug could be large and slow, while the hard bug is small, fast, and have unpredictable movement. Harder bugs should be worth more points.
+** Each bug should have its own SVG graphics
+** There should be an easy, medium, and hard bug. For example, the easy bug could be large and slow, while the hard bug is small, fast, and have unpredictable movement. Harder bugs should be worth more points.
 - The game should keep track of the top 10 scores.
 
 ## Other Requirements for Project Completion
