@@ -36,9 +36,9 @@ window.onload = function() {
             });
         },
         ontouchend: function() {
-            game.score += 100;
+            game.score += 25;
             game.rootScene.removeChild(this);
-            // game.rootScene.addChild(scoreLabel);
+            game.rootScene.addChild(scoreLabel);
         }
     });
 
@@ -56,8 +56,9 @@ window.onload = function() {
             });
         },
         ontouchend: function() {
-            game.score += 100;
+            game.score += 50;
             game.rootScene.removeChild(this);
+            game.rootScene.addChild(scoreLabel);
         }
     });
 
@@ -70,46 +71,45 @@ window.onload = function() {
                 this.frame = [0, 1, 0, 2][Math.floor(this.age/5) % 4] + 5;
                 if (this.x === 700){
                     game.replaceScene(new SceneGameOver());
-                    game.end();
                 }
             });
         },
         ontouchend: function() {
-            game.score += 100;
             game.rootScene.removeChild(this);
+            game.score += 100;
+            game.rootScene.addChild(scoreLabel);
         }
     });
 
     var SceneGameOver = Class.create(Scene, {
-        initialize: function(score) {
+        initialize: function() {
             Scene.apply(this);
-            this.backgroundColor = 'black';
+            // this.backgroundColor = 'black';
 
-            var gameOverLabel = new Label("GAME OVER<br>Tap to Restart");
-            gameOverLabel.x = 8;
-            gameOverLabel.y = 128;
-            gameOverLabel.color = 'white';
+            var gameOverLabel = new Label("GAME OVER<br/><br/>Tap to Restart<br/><br/>Your Score:" + game.score );
+            gameOverLabel.x = 250;
+            gameOverLabel.y = 150;
+            gameOverLabel.color = 'black';
             gameOverLabel.font = '32px strong';
             gameOverLabel.textAlign = 'center';
             game.rootScene.addChild(gameOverLabel);
-    },
-        touchToRestart: function(evt) {
-            game.start();
-            game = Game.instance;
-            game.replaceScene(new SceneGame());
-}
-});
+        },
+        ontouchend: function() {
+            location.reload();
+        }
+    });
 
     game.onload = function() {
-            game.score = 0;
+        game.score = 0;
         game.rootScene.addEventListener('enterframe', function() {
             scoreLabel = new Label("Score: ");
             scoreLabel.addEventListener('enterframe', function(){
-                this.text = "Score:"+game.score;
+                this.text = "Score:" + game.score;
             });
             scoreLabel.x = 600;
             scoreLabel.color = "black";
             scoreLabel.font = "18px 'Helvetica'";
+
 
             if(this.age % 20 === 0 && level < 3 ){
                 var easyBug = new HardBug(0, rand(320));
@@ -122,11 +122,11 @@ window.onload = function() {
             //     var medBug  = new MedBug(0, rand(320));
             //     var hardBug = new HardBug(0, rand(320));
             }
-            this.addChild(scoreLabel);
         });
     };
     game.start();
 };
+
 function rand(num){
     return Math.floor( Math.random() * num);
 }
