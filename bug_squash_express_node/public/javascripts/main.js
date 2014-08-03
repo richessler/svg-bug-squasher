@@ -30,6 +30,7 @@ window.onload = function() {
                 this.frame = [0, 1, 0, 2][Math.floor(this.age/5) % 4] + 5;
 
                 if (this.x === 700){
+                    game.replaceScene(new SceneGameOver());
                     game.end();
                 }
             });
@@ -49,6 +50,7 @@ window.onload = function() {
                 // this.y += game.medSpeed;
                 this.frame = [0, 1, 0, 2][Math.floor(this.age/5) % 4] + 5;
                 if (this.x === 700){
+                    var gameOver = new SceneGameOver();
                     game.end();
                 }
             });
@@ -67,6 +69,7 @@ window.onload = function() {
                 // this.y += game.hardSpeed;
                 this.frame = [0, 1, 0, 2][Math.floor(this.age/5) % 4] + 5;
                 if (this.x === 700){
+                    game.replaceScene(new SceneGameOver());
                     game.end();
                 }
             });
@@ -77,9 +80,29 @@ window.onload = function() {
         }
     });
 
+    var SceneGameOver = Class.create(Scene, {
+        initialize: function(score) {
+            Scene.apply(this);
+            this.backgroundColor = 'black';
+
+            var gameOverLabel = new Label("GAME OVER<br>Tap to Restart");
+            gameOverLabel.x = 8;
+            gameOverLabel.y = 128;
+            gameOverLabel.color = 'white';
+            gameOverLabel.font = '32px strong';
+            gameOverLabel.textAlign = 'center';
+            game.rootScene.addChild(gameOverLabel);
+    },
+        touchToRestart: function(evt) {
+            game.start();
+            game = Game.instance;
+            game.replaceScene(new SceneGame());
+}
+});
+
     game.onload = function() {
-        game.rootScene.addEventListener('enterframe', function() {
             game.score = 0;
+        game.rootScene.addEventListener('enterframe', function() {
             scoreLabel = new Label("Score: ");
             scoreLabel.addEventListener('enterframe', function(){
                 this.text = "Score:"+game.score;
@@ -87,10 +110,9 @@ window.onload = function() {
             scoreLabel.x = 600;
             scoreLabel.color = "black";
             scoreLabel.font = "18px 'Helvetica'";
-            game.rootScene.addChild(scoreLabel);
 
             if(this.age % 20 === 0 && level < 3 ){
-                var easyBug = new EasyBug(0, rand(320));
+                var easyBug = new HardBug(0, rand(320));
             // } else if (this.age % 20 === 0 && level > 2 && level < 7 ) {
             //     var easyBug = new EasyBug(0, rand(320));
             //     var medBug  = new MedBug(0, rand(320));
@@ -100,7 +122,7 @@ window.onload = function() {
             //     var medBug  = new MedBug(0, rand(320));
             //     var hardBug = new HardBug(0, rand(320));
             }
-
+            this.addChild(scoreLabel);
         });
     };
     game.start();
