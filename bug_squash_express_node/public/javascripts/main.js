@@ -2,8 +2,8 @@ enchant();
 
 window.onload = function() {
     var game = new Game(700, 700);
-    var level = 1;
-    maxTime = 10;
+    var level = 0;
+    var maxTime = 10;
     game.fps = 24;
     game.easySpeed = 1;
     game.medSpeed  = 2;
@@ -38,7 +38,7 @@ window.onload = function() {
             });
         },
         ontouchend: function() {
-            game.score += 100;
+            game.score += 25;
             game.rootScene.removeChild(this);
             game.rootScene.addChild(scoreLabel);
         }
@@ -59,7 +59,7 @@ window.onload = function() {
             });
         },
         ontouchend: function() {
-            game.score += 100;
+            game.score += 50;
             game.rootScene.removeChild(this);
             game.rootScene.addChild(scoreLabel);
         }
@@ -97,7 +97,7 @@ window.onload = function() {
             gameOverLabel.color = 'black';
             gameOverLabel.font = '32px strong';
             gameOverLabel.textAlign = 'center';
-            game.rootScene.addChild(gameOverLabel);
+            this.addChild(gameOverLabel);
         },
         ontouchend: function() {
             location.reload();
@@ -115,15 +115,10 @@ window.onload = function() {
             changeLabel.color = 'black';
             changeLabel.font = '32px strong';
             changeLabel.textAlign = 'center';
-            game.rootScene.addChild(changeLabel);
+            this.addChild(changeLabel);
         },
         ontouchend: function() {
-            debugger
-            maxTime = 10;
-            game.fps = 24;
-            level++;
-            game.pushScene(game.rootScene);
-            // this.replaceScene(game.rootScene);
+            game.replaceScene(game.rootScene);
         }
     });
 
@@ -142,26 +137,27 @@ window.onload = function() {
         },
         ontouchend: function() {
             game.replaceScene(game.rootScene);
+
         }
     });
 
     // This object starts counting down once the game is started.
-            var timerDown = {
-                frameCount: maxTime * game.fps, // total needed frames.
-                tick: function () {
-                    this.frameCount -= 1;  // count down
-                }
-            };
+        var timerDown = {
+            frameCount: maxTime * game.fps, // total needed frames.
+            tick: function () {
+                this.frameCount -= 1;  // count down
+            }
+        };
 
     game.onload = function() {
         splash = new SceneSplash();
         game.pushScene(splash);
-        var level = 1;
         var maxTime = 10;
-        var timeLabel = new Label("Time Remaining: ");
+        var timeLabel = new Label();
         game.rootScene.addChild(timeLabel);
-        scoreLabel = new Label("Score: ");
+        scoreLabel = new Label();
         game.rootScene.addChild(scoreLabel);
+
 
         game.score = 0;
         game.rootScene.addEventListener('enterframe', function() {
@@ -181,21 +177,32 @@ window.onload = function() {
             timeLabel.text = 'Time remaining: ' + seconds;
 
             if (seconds === 0){
-                var sceneChange = new SceneChange();
-                game.replaceScene(sceneChange);
+
+                var children = game.rootScene.childNodes;
+                for ( var i = 2; i <= children.length; i++){
+                    if (children.length === 2) {
+                        timerDown.frameCount = 240;
+                        level++;
+                        var sceneChange = new SceneChange();
+                        game.replaceScene(sceneChange);
+                    } else {
+                        game.rootScene.removeChild(children[children.length - 1]);
+                    }
+                }
+
+
             }
 
-
             if(this.age % 20 === 0 && level < 3 ){
-                var easyBug = new HardBug(0, rand(320));
-            // } else if (this.age % 20 === 0 && level > 2 && level < 7 ) {
-            //     var easyBug = new EasyBug(0, rand(320));
-            //     var medBug  = new MedBug(0, rand(320));
-            //     var hardBug = new HardBug(0, rand(320));
-            // } else {
-            //     var easyBug = new EasyBug(0, rand(320));
-            //     var medBug  = new MedBug(0, rand(320));
-            //     var hardBug = new HardBug(0, rand(320));
+                new EasyBug(0, rand(320));
+            } else if (this.age % 20 === 0 && level > 2 && level < 7 ) {
+                new EasyBug(0, rand(320));
+                new MedBug(0, rand(320));
+                new HardBug(0, rand(320));
+            } else if (this.age % 10 === 0 && level > 7) {
+                new EasyBug(0, rand(320));
+                new MedBug(0, rand(320));
+                new HardBug(0, rand(320));
             }
 
         });
