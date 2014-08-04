@@ -3,13 +3,13 @@ enchant();
 window.onload = function() {
     var game = new Game(700, 700);
     var level = 1;
+    maxTime = 10;
     game.fps = 24;
     game.easySpeed = 1;
     game.medSpeed  = 2;
     game.hardSpeed = 4;
-    game.touched = true;
+    // game.touched = true;
     game.preload('./images/bug1.svg');
-
 
     var Bug = enchant.Class.create(enchant.Sprite, {
         initialize: function(x, y) {
@@ -22,6 +22,7 @@ window.onload = function() {
         }
     });
 
+    // Defines Easy-Level bug (slow/large)
     var EasyBug = enchant.Class.create(Bug, {
         initialize: function(x, y) {
             Bug.call(this, x, y);
@@ -32,7 +33,7 @@ window.onload = function() {
 
                 if (this.x === 700){
                     game.replaceScene(new SceneGameOver());
-                    game.end();
+                    game.stop();
                 }
             });
         },
@@ -43,6 +44,7 @@ window.onload = function() {
         }
     });
 
+    //Defines Medium-Level bug (slowish/largish)
     var MedBug = enchant.Class.create(Bug, {
         initialize: function(x, y) {
             Bug.call(this, x, y);
@@ -63,6 +65,7 @@ window.onload = function() {
         }
     });
 
+    //Defines Hard-Level bug (small/fast)
     var HardBug = enchant.Class.create(Bug, {
         initialize: function(x, y) {
             Bug.call(this, x, y);
@@ -101,23 +104,68 @@ window.onload = function() {
         }
     });
 
-    // This object starts counting down once the game is started.
-    var timerDown = {
-        frameCount: 30 * game.fps,     // total needed frames.
-        tick: function () {
-                this.frameCount -= 1;  // count down instead of up.
+    var SceneChange = Class.create(Scene, {
+        initialize: function() {
+            Scene.apply(this);
+            // this.backgroundColor = 'black';
+
+            var changeLabel = new Label("Great Job!<br/><br/>You Passed Level " + level + "<br/><br/>With a Score of:" + game.score + "<br/><br/>Tap for Level: " + (level + 1) );
+            changeLabel.x = 250;
+            changeLabel.y = 150;
+            changeLabel.color = 'black';
+            changeLabel.font = '32px strong';
+            changeLabel.textAlign = 'center';
+            game.rootScene.addChild(changeLabel);
+        },
+        ontouchend: function() {
+            debugger
+            maxTime = 10;
+            game.fps = 24;
+            level++;
+            game.pushScene(game.rootScene);
+            // this.replaceScene(game.rootScene);
         }
-    };
+    });
+
+    var SceneSplash = Class.create(Scene, {
+        initialize: function() {
+            Scene.apply(this);
+            // this.backgroundColor = 'black';
+
+            var splashLabel = new Label("WELCOME!<br/><br/>Let's Smash Some Bugs<br/><br/>Tap To Start!");
+            splashLabel.x = 250;
+            splashLabel.y = 150;
+            splashLabel.color = 'black';
+            splashLabel.font = '32px strong';
+            splashLabel.textAlign = 'center';
+            this.addChild(splashLabel);
+        },
+        ontouchend: function() {
+            game.replaceScene(game.rootScene);
+        }
+    });
+
+    // This object starts counting down once the game is started.
+            var timerDown = {
+                frameCount: maxTime * game.fps, // total needed frames.
+                tick: function () {
+                    this.frameCount -= 1;  // count down
+                }
+            };
 
     game.onload = function() {
-
-        var timeLabel = new Label("Collect droplets as fast as you can.");
+        splash = new SceneSplash();
+        game.pushScene(splash);
+        var level = 1;
+        var maxTime = 10;
+        var timeLabel = new Label("Time Remaining: ");
         game.rootScene.addChild(timeLabel);
         scoreLabel = new Label("Score: ");
         game.rootScene.addChild(scoreLabel);
 
         game.score = 0;
         game.rootScene.addEventListener('enterframe', function() {
+
             scoreLabel.addEventListener('enterframe', function(){
                 this.text = "Score:"+game.score;
             });
@@ -129,8 +177,14 @@ window.onload = function() {
             timerDown.tick();
 
             // Update label.
-            timeLabel.text = 'Time remaining: ' +
-            Math.ceil(timerDown.frameCount / game.fps);
+            var seconds = Math.ceil(timerDown.frameCount / game.fps);
+            timeLabel.text = 'Time remaining: ' + seconds;
+
+            if (seconds === 0){
+                var sceneChange = new SceneChange();
+                game.replaceScene(sceneChange);
+            }
+
 
             if(this.age % 20 === 0 && level < 3 ){
                 var easyBug = new HardBug(0, rand(320));
