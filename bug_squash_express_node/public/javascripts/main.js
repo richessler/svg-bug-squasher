@@ -2,7 +2,7 @@ enchant();
 
 window.onload = function() {
     var game = new Game(700, 700);
-    var level = 0;
+    var level = 8;
     var maxTime = 10;
     game.fps = 24;
     game.easySpeed = 1;
@@ -152,11 +152,11 @@ window.onload = function() {
     game.onload = function() {
         splash = new SceneSplash();
         game.pushScene(splash);
-        var maxTime = 10;
+        var scoreLabel = new Label();
         var timeLabel = new Label();
         game.rootScene.addChild(timeLabel);
-        scoreLabel = new Label();
         game.rootScene.addChild(scoreLabel);
+        var maxTime = 10;
 
 
         game.score = 0;
@@ -192,14 +192,15 @@ window.onload = function() {
 
 
             }
-
-            if(this.age % 20 === 0 && level < 3 ){
+            if((this.age)% 20 === 0 && level < 3 && game.rootScene.childNodes.length > 1){
                 new EasyBug(0, rand(320));
-            } else if (this.age % 20 === 0 && level > 2 && level < 7 ) {
+            } else if ((this.age - 10) % 20 === 0 && level > 2 && level < 7 && game.rootScene.childNodes.length > 1) {
                 new EasyBug(0, rand(320));
                 new MedBug(0, rand(320));
                 new HardBug(0, rand(320));
-            } else if (this.age % 10 === 0 && level > 7) {
+            } else if ((this.age - 10) % 19 === 0 && level > 7 && game.rootScene.childNodes.length > 1) {
+                debugger
+
                 new EasyBug(0, rand(320));
                 new MedBug(0, rand(320));
                 new HardBug(0, rand(320));
