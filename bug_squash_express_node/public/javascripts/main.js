@@ -1,17 +1,18 @@
 enchant();
 
 window.onload = function() {
-    var game = new Game(700, 700);
-    var level = 8;
-    var maxTime = 10;
-    game.fps = 24;
+    var game       = new Game(700, 700);
+    var level      = 5;
+    var maxTime    = 60;
+    game.score     = 0;
+    game.fps       = 24;
     game.easySpeed = 1;
     game.medSpeed  = 2;
     game.hardSpeed = 4;
-    // game.touched = true;
-    game.preload('./images/bug1.svg');
+    game.preload(['./images/bug1.svg', './images/bug2.svg']);
 
-    var Bug = enchant.Class.create(enchant.Sprite, {
+    //Bug Constructor - extending from enchant.Sprite
+    var LadyBug = enchant.Class.create(enchant.Sprite, {
         initialize: function(x, y) {
             enchant.Sprite.call(this, 85, 85);
             this.x = x;
@@ -22,10 +23,22 @@ window.onload = function() {
         }
     });
 
-    // Defines Easy-Level bug (slow/large)
-    var EasyBug = enchant.Class.create(Bug, {
+    //Bug Constructor - extending from enchant.Sprite
+    var DragonFly = enchant.Class.create(enchant.Sprite, {
         initialize: function(x, y) {
-            Bug.call(this, x, y);
+            enchant.Sprite.call(this, 85, 85);
+            this.x = x;
+            this.y = y;
+            this.image = game.assets['./images/bug2.svg'];
+            this.frame = 5;
+            game.rootScene.addChild(this);
+        }
+    });
+
+    // Defines Easy-Level bug (slow/large)
+    var EasyBug = enchant.Class.create(LadyBug, {
+        initialize: function(x, y) {
+            LadyBug.call(this, x, y);
             this.addEventListener('enterframe', function() {
                 this.x += game.easySpeed;
                 // this.y += game.easySpeed;
@@ -37,6 +50,7 @@ window.onload = function() {
                 }
             });
         },
+        //adds points, removes(kills) bug from screen, updates score
         ontouchend: function() {
             game.score += 25;
             game.rootScene.removeChild(this);
@@ -45,9 +59,9 @@ window.onload = function() {
     });
 
     //Defines Medium-Level bug (slowish/largish)
-    var MedBug = enchant.Class.create(Bug, {
+    var MedBug = enchant.Class.create(DragonFly, {
         initialize: function(x, y) {
-            Bug.call(this, x, y);
+            DragonFly.call(this, x, y);
             this.addEventListener('enterframe', function() {
                 this.x += game.medSpeed;
                 // this.y += game.medSpeed;
@@ -58,6 +72,7 @@ window.onload = function() {
                 }
             });
         },
+        //adds points, removes(kills) bug from screen, updates score
         ontouchend: function() {
             game.score += 50;
             game.rootScene.removeChild(this);
@@ -66,9 +81,9 @@ window.onload = function() {
     });
 
     //Defines Hard-Level bug (small/fast)
-    var HardBug = enchant.Class.create(Bug, {
+    var HardBug = enchant.Class.create(LadyBug, {
         initialize: function(x, y) {
-            Bug.call(this, x, y);
+            LadyBug.call(this, x, y);
             this.addEventListener('enterframe', function() {
                 this.x += game.hardSpeed;
                 // this.y += game.hardSpeed;
@@ -79,6 +94,7 @@ window.onload = function() {
                 }
             });
         },
+        //adds points, removes(kills) bug from screen, updates score
         ontouchend: function() {
             game.score += 100;
             game.rootScene.removeChild(this);
@@ -86,42 +102,7 @@ window.onload = function() {
         }
     });
 
-    var SceneGameOver = Class.create(Scene, {
-        initialize: function() {
-            Scene.apply(this);
-            // this.backgroundColor = 'black';
-
-            var gameOverLabel = new Label("GAME OVER<br/><br/>Tap to Restart<br/><br/>Your Score:" + game.score );
-            gameOverLabel.x = 250;
-            gameOverLabel.y = 150;
-            gameOverLabel.color = 'black';
-            gameOverLabel.font = '32px strong';
-            gameOverLabel.textAlign = 'center';
-            this.addChild(gameOverLabel);
-        },
-        ontouchend: function() {
-            location.reload();
-        }
-    });
-
-    var SceneChange = Class.create(Scene, {
-        initialize: function() {
-            Scene.apply(this);
-            // this.backgroundColor = 'black';
-
-            var changeLabel = new Label("Great Job!<br/><br/>You Passed Level " + level + "<br/><br/>With a Score of:" + game.score + "<br/><br/>Tap for Level: " + (level + 1) );
-            changeLabel.x = 250;
-            changeLabel.y = 150;
-            changeLabel.color = 'black';
-            changeLabel.font = '32px strong';
-            changeLabel.textAlign = 'center';
-            this.addChild(changeLabel);
-        },
-        ontouchend: function() {
-            game.replaceScene(game.rootScene);
-        }
-    });
-
+    //Creates Game scene for home page
     var SceneSplash = Class.create(Scene, {
         initialize: function() {
             Scene.apply(this);
@@ -141,6 +122,44 @@ window.onload = function() {
         }
     });
 
+    //Creates Game scene for in between levels
+    var SceneChange = Class.create(Scene, {
+        initialize: function() {
+            Scene.apply(this);
+            // this.backgroundColor = 'black';
+
+            var changeLabel = new Label("Great Job!<br/><br/>You Passed Level " + level + "<br/><br/>With a Score of:" + game.score + "<br/><br/>Tap for Level: " + (level + 1) );
+            changeLabel.x = 250;
+            changeLabel.y = 150;
+            changeLabel.color = 'black';
+            changeLabel.font = '32px strong';
+            changeLabel.textAlign = 'center';
+            this.addChild(changeLabel);
+        },
+        ontouchend: function() {
+            game.replaceScene(game.rootScene);
+        }
+    });
+
+    //Creates Game scene for Gameover
+    var SceneGameOver = Class.create(Scene, {
+        initialize: function() {
+            Scene.apply(this);
+            // this.backgroundColor = 'black';
+
+            var gameOverLabel = new Label("GAME OVER<br/><br/>Tap to Restart<br/><br/>Your Score:" + game.score );
+            gameOverLabel.x = 250;
+            gameOverLabel.y = 150;
+            gameOverLabel.color = 'black';
+            gameOverLabel.font = '32px strong';
+            gameOverLabel.textAlign = 'center';
+            this.addChild(gameOverLabel);
+        },
+        ontouchend: function() {
+            location.reload();
+        }
+    });
+
     // This object starts counting down once the game is started.
         var timerDown = {
             frameCount: maxTime * game.fps, // total needed frames.
@@ -149,6 +168,7 @@ window.onload = function() {
             }
         };
 
+    //game functionality when game is started
     game.onload = function() {
         splash = new SceneSplash();
         game.pushScene(splash);
@@ -158,10 +178,10 @@ window.onload = function() {
         game.rootScene.addChild(scoreLabel);
         var maxTime = 10;
 
-
-        game.score = 0;
         game.rootScene.addEventListener('enterframe', function() {
 
+            //creates event listen for when points are gained -
+            //triggered when bugs are 'killed'
             scoreLabel.addEventListener('enterframe', function(){
                 this.text = "Score:"+game.score;
             });
@@ -169,15 +189,16 @@ window.onload = function() {
             scoreLabel.color = "black";
             scoreLabel.font = "18px 'Helvetica'";
 
-            // Tick the timer.
+            //call tick function for timerDown function
+            //to count down game clock
             timerDown.tick();
 
-            // Update label.
+            //logic to uppdate time label
             var seconds = Math.ceil(timerDown.frameCount / game.fps);
-            timeLabel.text = 'Time remaining: ' + seconds;
+            timeLabel.text = 'Time remaining: ' + seconds + ' seconds';
 
+            //logic to reset game clock for each level
             if (seconds === 0){
-
                 var children = game.rootScene.childNodes;
                 for ( var i = 2; i <= children.length; i++){
                     if (children.length === 2) {
@@ -189,27 +210,26 @@ window.onload = function() {
                         game.rootScene.removeChild(children[children.length - 1]);
                     }
                 }
-
-
             }
-            if((this.age)% 20 === 0 && level < 3 && game.rootScene.childNodes.length > 1){
-                new EasyBug(0, rand(320));
-            } else if ((this.age - 10) % 20 === 0 && level > 2 && level < 7 && game.rootScene.childNodes.length > 1) {
-                new EasyBug(0, rand(320));
-                new MedBug(0, rand(320));
-                new HardBug(0, rand(320));
-            } else if ((this.age - 10) % 19 === 0 && level > 7 && game.rootScene.childNodes.length > 1) {
-                debugger
-
-                new EasyBug(0, rand(320));
-                new MedBug(0, rand(320));
-                new HardBug(0, rand(320));
+            //logic to release bugs based on the level
+            //more bugs released the further you get
+            if ((this.age) % 40 === 0){
+                for (var j = 0; j < level; j++){
+                    new EasyBug(0, rand(320));
+                    if (j > 3 && j <= 7){
+                        new MedBug(0, rand(320));
+                    } else if ( j > 7) {
+                        new MedBug(0, rand(320));
+                        new HardBug(0, rand(320));
+                    }
+                }
             }
 
         });
     };
+    //tell game to start
     game.start();
 };
-function rand(num){
-    return Math.floor( Math.random() * num);
-}
+
+
+
