@@ -12,30 +12,6 @@ window.onload = function() {
     game.preload(['./images/bug1.svg', './images/bug2.svg', './images/bug3.svg', './images/picnic.png']);
 
     //Easy Bug constructor
-    var LadyBug = enchant.Class.create(enchant.Sprite, {
-        initialize: function(x, y) {
-            enchant.Sprite.call(this, 59, 50);
-            this.x = x;
-            this.y = y;
-            this.image = game.assets['./images/bug1.svg'];
-            this.frame = 5;
-            game.rootScene.addChild(this);
-        }
-    });
-
-    //Medium bug constructor
-    var Ants = enchant.Class.create(enchant.Sprite, {
-        initialize: function(x, y) {
-            enchant.Sprite.call(this, 40, 45);
-            this.x = x;
-            this.y = y;
-            this.image = game.assets['./images/bug2.svg'];
-            this.frame = 5;
-            game.rootScene.addChild(this);
-        }
-    });
-
-    //Hard bug constructor
     var Scorpion = enchant.Class.create(enchant.Sprite, {
         initialize: function(x, y) {
             enchant.Sprite.call(this, 80, 40);
@@ -47,10 +23,35 @@ window.onload = function() {
         }
     });
 
-    // Defines Easy-Level bug (slow/large)
-    var EasyBug = enchant.Class.create(LadyBug, {
+    //Medium bug constructor
+    var LadyBug = enchant.Class.create(enchant.Sprite, {
         initialize: function(x, y) {
-            LadyBug.call(this, x, y);
+            enchant.Sprite.call(this, 59, 50);
+            this.x = x;
+            this.y = y;
+            this.image = game.assets['./images/bug1.svg'];
+            this.frame = 5;
+            game.rootScene.addChild(this);
+        }
+    });
+
+    //Hard bug constructor
+    var Ant = enchant.Class.create(enchant.Sprite, {
+        initialize: function(x, y) {
+            enchant.Sprite.call(this, 40, 45);
+            this.x = x;
+            this.y = y;
+            this.image = game.assets['./images/bug2.svg'];
+            this.frame = 5;
+            debugger
+            game.rootScene.addChild(this);
+        }
+    });
+
+    // Defines Easy-Level bug (slow/large)
+    var EasyBug = enchant.Class.create(Scorpion, {
+        initialize: function(x, y) {
+            Scorpion.call(this, x, y);
             this.addEventListener('enterframe', function() {
                 this.x += game.easySpeed;
                 // this.y += game.easySpeed;
@@ -71,9 +72,9 @@ window.onload = function() {
     });
 
     //Defines Medium-Level bug (slowish/largish)
-    var MedBug = enchant.Class.create(Ants, {
+    var MedBug = enchant.Class.create(LadyBug, {
         initialize: function(x, y) {
-            Ants.call(this, x, y);
+            LadyBug.call(this, x, y);
             this.addEventListener('enterframe', function() {
                 this.x += game.medSpeed;
                 // this.y += game.medSpeed;
@@ -93,9 +94,9 @@ window.onload = function() {
     });
 
     //Defines Hard-Level bug (small/fast)
-    var HardBug = enchant.Class.create(Scorpion, {
+    var HardBug = enchant.Class.create(Ant, {
         initialize: function(x, y) {
-            Scorpion.call(this, x, y);
+            Ant.call(this, x, y);
             this.addEventListener('enterframe', function() {
                 this.x += game.hardSpeed;
                 // this.y += game.hardSpeed;
@@ -231,7 +232,7 @@ window.onload = function() {
             //logic to release bugs based on the level
             //more bugs released the further you get
             if ((this.age) % 40 === 0){
-                for (var j = 0; j < level; j++){
+                for (var j = 0; j <= level; j++){
                     new EasyBug(0, (rand(620) + 30));
                     if (j > 3 && j <= 7){
                         new MedBug(0, (rand(620) + 30));
@@ -241,9 +242,9 @@ window.onload = function() {
                     }
                 }
             }
-
         });
-    };
+    };//game.onload();
+
     //tell game to start
     game.start();
 };
