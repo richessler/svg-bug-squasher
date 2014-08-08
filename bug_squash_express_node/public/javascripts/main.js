@@ -1,9 +1,9 @@
 enchant();
 
 window.onload = function() {
-    var game       = new Game(700, 700);
-    var level      = 8;
-    var maxTime    = 10;
+    var game       = new Game(650, 700);
+    var level      = 1;
+    var maxTime    = 60;
     game.score     = 0;
     game.fps       = 24;
     game.easySpeed = 1;
@@ -43,7 +43,6 @@ window.onload = function() {
             this.y = y;
             this.image = game.assets['./images/bug2.svg'];
             this.frame = 5;
-            debugger
             game.rootScene.addChild(this);
         }
     });
@@ -57,7 +56,7 @@ window.onload = function() {
                 // this.y += game.easySpeed;
                 this.frame = [0, 1, 0, 2][Math.floor(this.age/5) % 4] + 5;
 
-                if (this.x === 650){
+                if (this.x === 640){
                     game.replaceScene(new SceneGameOver());
                     game.stop();
                 }
@@ -79,7 +78,7 @@ window.onload = function() {
                 this.x += game.medSpeed;
                 // this.y += game.medSpeed;
                 this.frame = [0, 1, 0, 2][Math.floor(this.age/5) % 4] + 5;
-                if (this.x === 650){
+                if (this.x === 640){
                     game.replaceScene(new SceneGameOver());
                     game.end();
                 }
@@ -101,7 +100,7 @@ window.onload = function() {
                 this.x += game.hardSpeed;
                 // this.y += game.hardSpeed;
                 this.frame = [0, 1, 0, 2][Math.floor(this.age/5) % 4] + 5;
-                if (this.x === 650){
+                if (this.x === 640){
                     game.replaceScene(new SceneGameOver());
                     game.end();
                 }
@@ -120,9 +119,9 @@ window.onload = function() {
         initialize: function() {
             Scene.apply(this);
 
-            var splashLabel = new Label("WELCOME! <br/><br/>Let's Smash Some Bugs<br/><br/>Tap To Start!");
-            splashLabel.x = 185;
-            splashLabel.y = 150;
+            var splashLabel = new Label("We've been swarmed!<br/><br/>Let's Smash 'em!<br/><br/>Tap To Start!");
+            splashLabel.x = 175;
+            splashLabel.y = 250;
             splashLabel.image = 'black';
             this.backgroundColor = 'rgba(255,255,255,.5)';
             splashLabel.font = "24px bold 'Helvetica'";
@@ -142,8 +141,8 @@ window.onload = function() {
             this.backgroundColor = 'rgba(255,255,255,.5)';
 
             var changeLabel = new Label("Great Job!<br/><br/>You Passed Level " + level + "<br/><br/>With a Score of:" + game.score + "<br/><br/>Tap for Level: " + (level + 1) );
-            changeLabel.x = 185;
-            changeLabel.y = 150;
+            changeLabel.x = 175;
+            changeLabel.y = 200;
             changeLabel.color = 'black';
             changeLabel.font = "24px bold 'Helvetica'";
             changeLabel.textAlign = 'center';
@@ -161,8 +160,8 @@ window.onload = function() {
             this.backgroundColor = 'rgba(255,255,255,.5)';
 
             var gameOverLabel = new Label("GAME OVER<br/><br/>Tap to Restart<br/><br/>Your Score:" + game.score );
-            gameOverLabel.x = 185;
-            gameOverLabel.y = 150;
+            gameOverLabel.x = 175;
+            gameOverLabel.y = 250;
             gameOverLabel.color = 'black';
             gameOverLabel.font = "24px strong 'Helvetica'";
             gameOverLabel.textAlign = 'center';
