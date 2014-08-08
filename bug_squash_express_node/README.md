@@ -2,13 +2,10 @@ SVG Bug Squasher Submission for Richard Hessler
 ============
 
 ## To Start
-- Enter the directory of the application, in this case:
+- CD into the directory of the application, in this case:
     `bug_squash_express_node`
-- Start the application with:
+- Start the application with the command:
     `node app`
-- If you have install the package `nodemon` you may use:
-    `nodemon`
-  to begin the application
 
 ## Gameplay Requirements
 - The game should have an infinite series of levels
