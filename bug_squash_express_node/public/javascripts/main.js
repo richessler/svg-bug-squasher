@@ -2,19 +2,19 @@ enchant();
 
 window.onload = function() {
     var game       = new Game(700, 700);
-    var level      = 5;
-    var maxTime    = 60;
+    var level      = 8;
+    var maxTime    = 10;
     game.score     = 0;
     game.fps       = 24;
     game.easySpeed = 1;
     game.medSpeed  = 2;
     game.hardSpeed = 4;
-    game.preload(['./images/bug1.svg', './images/bug2.svg']);
+    game.preload(['./images/bug1.svg', './images/bug2.svg', './images/bug3.svg', './images/picnic.png']);
 
-    //Bug Constructor - extending from enchant.Sprite
+    //Easy Bug constructor
     var LadyBug = enchant.Class.create(enchant.Sprite, {
         initialize: function(x, y) {
-            enchant.Sprite.call(this, 85, 85);
+            enchant.Sprite.call(this, 59, 50);
             this.x = x;
             this.y = y;
             this.image = game.assets['./images/bug1.svg'];
@@ -23,13 +23,25 @@ window.onload = function() {
         }
     });
 
-    //Bug Constructor - extending from enchant.Sprite
-    var DragonFly = enchant.Class.create(enchant.Sprite, {
+    //Medium bug constructor
+    var Ants = enchant.Class.create(enchant.Sprite, {
         initialize: function(x, y) {
-            enchant.Sprite.call(this, 85, 85);
+            enchant.Sprite.call(this, 40, 45);
             this.x = x;
             this.y = y;
             this.image = game.assets['./images/bug2.svg'];
+            this.frame = 5;
+            game.rootScene.addChild(this);
+        }
+    });
+
+    //Hard bug constructor
+    var Scorpion = enchant.Class.create(enchant.Sprite, {
+        initialize: function(x, y) {
+            enchant.Sprite.call(this, 80, 40);
+            this.x = x;
+            this.y = y;
+            this.image = game.assets['./images/bug3.svg'];
             this.frame = 5;
             game.rootScene.addChild(this);
         }
@@ -44,7 +56,7 @@ window.onload = function() {
                 // this.y += game.easySpeed;
                 this.frame = [0, 1, 0, 2][Math.floor(this.age/5) % 4] + 5;
 
-                if (this.x === 700){
+                if (this.x === 650){
                     game.replaceScene(new SceneGameOver());
                     game.stop();
                 }
@@ -59,14 +71,14 @@ window.onload = function() {
     });
 
     //Defines Medium-Level bug (slowish/largish)
-    var MedBug = enchant.Class.create(DragonFly, {
+    var MedBug = enchant.Class.create(Ants, {
         initialize: function(x, y) {
-            DragonFly.call(this, x, y);
+            Ants.call(this, x, y);
             this.addEventListener('enterframe', function() {
                 this.x += game.medSpeed;
                 // this.y += game.medSpeed;
                 this.frame = [0, 1, 0, 2][Math.floor(this.age/5) % 4] + 5;
-                if (this.x === 700){
+                if (this.x === 650){
                     game.replaceScene(new SceneGameOver());
                     game.end();
                 }
@@ -81,14 +93,14 @@ window.onload = function() {
     });
 
     //Defines Hard-Level bug (small/fast)
-    var HardBug = enchant.Class.create(LadyBug, {
+    var HardBug = enchant.Class.create(Scorpion, {
         initialize: function(x, y) {
-            LadyBug.call(this, x, y);
+            Scorpion.call(this, x, y);
             this.addEventListener('enterframe', function() {
                 this.x += game.hardSpeed;
                 // this.y += game.hardSpeed;
                 this.frame = [0, 1, 0, 2][Math.floor(this.age/5) % 4] + 5;
-                if (this.x === 700){
+                if (this.x === 650){
                     game.replaceScene(new SceneGameOver());
                     game.end();
                 }
@@ -106,13 +118,13 @@ window.onload = function() {
     var SceneSplash = Class.create(Scene, {
         initialize: function() {
             Scene.apply(this);
-            // this.backgroundColor = 'black';
 
-            var splashLabel = new Label("WELCOME!<br/><br/>Let's Smash Some Bugs<br/><br/>Tap To Start!");
-            splashLabel.x = 250;
+            var splashLabel = new Label("WELCOME! <br/><br/>Let's Smash Some Bugs<br/><br/>Tap To Start!");
+            splashLabel.x = 185;
             splashLabel.y = 150;
-            splashLabel.color = 'black';
-            splashLabel.font = '32px strong';
+            splashLabel.image = 'black';
+            this.backgroundColor = 'rgba(255,255,255,.5)';
+            splashLabel.font = "24px bold 'Helvetica'";
             splashLabel.textAlign = 'center';
             this.addChild(splashLabel);
         },
@@ -126,13 +138,13 @@ window.onload = function() {
     var SceneChange = Class.create(Scene, {
         initialize: function() {
             Scene.apply(this);
-            // this.backgroundColor = 'black';
+            this.backgroundColor = 'rgba(255,255,255,.5)';
 
             var changeLabel = new Label("Great Job!<br/><br/>You Passed Level " + level + "<br/><br/>With a Score of:" + game.score + "<br/><br/>Tap for Level: " + (level + 1) );
-            changeLabel.x = 250;
+            changeLabel.x = 185;
             changeLabel.y = 150;
             changeLabel.color = 'black';
-            changeLabel.font = '32px strong';
+            changeLabel.font = "24px bold 'Helvetica'";
             changeLabel.textAlign = 'center';
             this.addChild(changeLabel);
         },
@@ -145,13 +157,13 @@ window.onload = function() {
     var SceneGameOver = Class.create(Scene, {
         initialize: function() {
             Scene.apply(this);
-            // this.backgroundColor = 'black';
+            this.backgroundColor = 'rgba(255,255,255,.5)';
 
             var gameOverLabel = new Label("GAME OVER<br/><br/>Tap to Restart<br/><br/>Your Score:" + game.score );
-            gameOverLabel.x = 250;
+            gameOverLabel.x = 185;
             gameOverLabel.y = 150;
             gameOverLabel.color = 'black';
-            gameOverLabel.font = '32px strong';
+            gameOverLabel.font = "24px strong 'Helvetica'";
             gameOverLabel.textAlign = 'center';
             this.addChild(gameOverLabel);
         },
@@ -174,6 +186,10 @@ window.onload = function() {
         game.pushScene(splash);
         var scoreLabel = new Label();
         var timeLabel = new Label();
+        timeLabel.x = 40;
+        timeLabel.y = 5;
+        timeLabel.font ="24px 'Helvetica'";
+
         game.rootScene.addChild(timeLabel);
         game.rootScene.addChild(scoreLabel);
         var maxTime = 10;
@@ -185,9 +201,10 @@ window.onload = function() {
             scoreLabel.addEventListener('enterframe', function(){
                 this.text = "Score:"+game.score;
             });
-            scoreLabel.x = 600;
+            scoreLabel.x = 500;
+            scoreLabel.y = 5;
             scoreLabel.color = "black";
-            scoreLabel.font = "18px 'Helvetica'";
+            scoreLabel.font = "24px 'Helvetica'";
 
             //call tick function for timerDown function
             //to count down game clock
@@ -202,7 +219,7 @@ window.onload = function() {
                 var children = game.rootScene.childNodes;
                 for ( var i = 2; i <= children.length; i++){
                     if (children.length === 2) {
-                        timerDown.frameCount = 240;
+                        timerDown.frameCount = 1440;
                         level++;
                         var sceneChange = new SceneChange();
                         game.replaceScene(sceneChange);
@@ -215,12 +232,12 @@ window.onload = function() {
             //more bugs released the further you get
             if ((this.age) % 40 === 0){
                 for (var j = 0; j < level; j++){
-                    new EasyBug(0, rand(320));
+                    new EasyBug(0, (rand(620) + 30));
                     if (j > 3 && j <= 7){
-                        new MedBug(0, rand(320));
+                        new MedBug(0, (rand(620) + 30));
                     } else if ( j > 7) {
-                        new MedBug(0, rand(320));
-                        new HardBug(0, rand(320));
+                        new MedBug(0, (rand(620) + 30));
+                        new HardBug(0, (rand(620) + 30));
                     }
                 }
             }

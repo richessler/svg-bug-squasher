@@ -1,9 +1,31 @@
 body {
+  /*background-image: url(../images/picnic.png);*/
   margin: 0;
   padding: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-image: url('http://www.clker.com/cliparts/0/f/b/8/1197091304272882353carlitos_Cartoon_Landscape.svg.hi.png');
+  background-size: cover;
 }
 
+div {
+  border-radius: 40px !important;
+  width: 666px !important;
+}
 a {
   color: #00B7FF;
 }
+
+div#enchant-stage {
+  border: 1px solid black !important;
+  border-radius: 40px !important;
+  width: 700px !important;
+  margin: 0 25% !important;
+  overflow: hidden ;
+  background-image: url(../images/picnic.png) !important;
+}
+
+canvas {
+  border-radius: 40px;
+  width: 666px;
+}
+
